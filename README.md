@@ -25,6 +25,7 @@ $ ./CppLinAlg
 
 - Matrix
     - Matrix(int r, int c)
+    - Matrix(int r, int c, double* d)
     - Matrix* add(Matrix* m)
     - Matrix* dot(Matrix* m)
     - Matrix* transpose()

@@ -1,4 +1,4 @@
-// TODO: Constructor with array as input
+// TODO: Slice function
 
 #include "../include/Matrix.h"
 #include <iostream>
@@ -24,6 +24,56 @@ Matrix::Matrix(int r, int c) {
     data = new double[r * c];
 }
 
+/*
+Thread function to partial clone a matrix.
+
+Arguments:
+    - a (double*): The source of values.
+    - b (double*): The dest of values.
+    - cols (int): The number of columns in the matrix.
+    - row (int): The row to preform math on.
+
+Return:
+    - N/A
+
+Example:
+    std::thread(clone_thread, a, b, 3, 0);
+*/
+void clone_thread(double* a, double* b, int cols, int row) {
+    for (int i = 0; i < cols; i++) {
+        b[(row * cols) + i] = a[(row * cols) + i];
+    }
+}
+
+/*
+Constructs a matrix with given values.
+
+Arguments:
+    - r (int): The number of rows in the matrix.
+    - c (int): The number of cols in the matrix.
+    - d (double*): The values to set the matrix to.
+
+Return:
+    - N/A
+
+Example:
+    double values[] = {1.0, 1.0, 2.0, 2.0}:
+    Matrix m(2, 2, values);
+*/
+Matrix::Matrix(int r, int c, double* d) {
+    rows = r;
+    cols = c;
+    data = new double[r * c];
+
+    std::thread threads[r];
+    for (int i = 0; i < r; i++) {
+        threads[i] = std::thread(clone_thread, d, data, c, i);
+    }
+
+    for (int i = 0; i < r; i++) {
+        threads[i].join();
+    }
+}
 
 /*
 Deconstructor for a Matrix.

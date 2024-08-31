@@ -8,6 +8,7 @@ class Matrix {
         double* data; 
     public:
         Matrix(int r, int c);
+        Matrix(int r, int c, double* d);
         ~Matrix();
 
         int getRows() {return rows;}

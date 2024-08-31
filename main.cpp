@@ -23,5 +23,9 @@ int main() {
     Matrix* m6 = m5->add(m4);
     m6->print();
 
+    double values[] = {1.0, 2.0, 3.0, 4.0};
+    Matrix* m7 = new Matrix(2, 2, values);
+    m7->print();
+
     return 0;
 }
