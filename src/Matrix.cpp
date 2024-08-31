@@ -1,3 +1,10 @@
+/*
+TODO:
+    - Add bounds checks on get/set 
+    - Add transpose
+    - Add add function
+*/
+
 #include "../include/Matrix.h"
 #include <iostream>
 #include <stdexcept>
@@ -7,11 +14,11 @@
 Constructor for a new Matrix.
 
 Arguments:
-    r (int): The number of rows of the matrix.
-    c (int): The number of cols of the matrix.
+    - r (int): The number of rows of the matrix.
+    - c (int): The number of cols of the matrix.
 
 Return:
-    N/A
+    - N/A
 
 Example:
     Matrix m(3, 2);
@@ -27,10 +34,10 @@ Matrix::Matrix(int r, int c) {
 Deconstructor for a Matrix.
 
 Arguments:
-    N/A
+    - N/A
 
 Return:
-    N/A
+    - N/A
 
 Example:
     Matrix m = new Matrix(3, 2);
@@ -45,13 +52,13 @@ Thread function to calculate partial dot product for a single row in the result
 matrix.
 
 Arguments:
-    a (Matrix*): The first matrix in dot product.
-    b (Matrix*): The second matrix in dot product.
-    c (Matrix*): The result matrix.
-    row (int): The row to preform math on.
+    - a (Matrix*): The first matrix in dot product.
+    - b (Matrix*): The second matrix in dot product.
+    - c (Matrix*): The result matrix.
+    - row (int): The row to preform math on.
 
 Return:
-    N/A
+    - N/A
 
 Example:
     std::thread(dot_thread, this, b, c, 0);
@@ -68,11 +75,11 @@ void dot_thread(Matrix* a, Matrix* b, Matrix* c, int row) {
 Computes the dot product of two matrixes.
 
 Arguments:
-    m (Matrix*): The matrix to do the dot product with.
+    - m (Matrix*): The matrix to do the dot product with.
 
 Return:
-    Matrix*: The result of the dot product.
-    std::runtime_error: An error if any occured.
+    - Matrix*: The result of the dot product.
+    - std::runtime_error: An error if any occured.
 
 Example:
     try {
@@ -105,11 +112,11 @@ Matrix* Matrix::dot(Matrix* m) {
 Gets a value in the matrix.
 
 Arguments:
-    r (int): The row to get.
-    c (int): The col to get.
+    - r (int): The row to get.
+    - c (int): The col to get.
 
 Return:
-    N/A
+    - double: The value in the matrix.
 
 Example:
     Matrix m(3, 2);
@@ -123,12 +130,12 @@ double Matrix::get(int r, int c) {
 Sets a value in the matrix.
 
 Arguments:
-    r (int): The row to set.
-    c (int): The col to set.
-    v (double): The value to set.
+    - r (int): The row to set.
+    - c (int): The col to set.
+    - v (double): The value to set.
 
 Return:
-    N/A
+    - N/A
 
 Example:
     Matrix m(3, 2);
@@ -143,10 +150,10 @@ void Matrix::set(int r, int c, double v) {
 Prints the data of the matrix.
 
 Arguments:
-    N/A
+    - N/A
 
 Return:
-    N/A
+    - N/A
 
 Example:
     Matrix m(3, 2);
