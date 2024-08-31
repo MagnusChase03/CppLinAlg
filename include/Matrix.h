@@ -13,6 +13,7 @@ class Matrix {
         int getRows() {return rows;}
         int getCols() {return cols;}
 
+        Matrix* add(Matrix* m);
         Matrix* dot(Matrix* m);
         Matrix* transpose();
 

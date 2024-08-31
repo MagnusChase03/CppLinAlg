@@ -1,7 +1,4 @@
-/*
-TODO:
-    - Add add function
-*/
+// TODO: Constructor with array as input
 
 #include "../include/Matrix.h"
 #include <iostream>
@@ -46,6 +43,64 @@ Matrix::~Matrix() {
 }
 
 /*
+Thread function to calculate partial addition for a single row in the result
+matrix.
+
+Arguments:
+    - a (Matrix*): The first matrix for addition.
+    - b (Matrix*): The second matrix for addition.
+    - c (Matrix*): The result matrix.
+    - row (int): The row to preform math on.
+
+Return:
+    - N/A
+
+Example:
+    std::thread(add_thread, this, b, c, 0);
+*/
+void add_thread(Matrix* a, Matrix* b, Matrix* c, int row) {
+    for (int i = 0; i < a->getCols(); i++) {
+        c->set(row, i, a->get(row, i) + b->get(row, i));
+    }
+}
+
+/*
+Returns the addition of two matrixes.
+
+Arguments:
+    - m (Matrix*): The matrix to add with.
+
+Returns:
+    - Matrix*: The result matrix of the addition.
+
+Example:
+    try {
+        Matrix* m = new Matrix(3, 2);
+        Matrix* m2 = new Matrix(3, 2);
+        Matrix* m3 = m.add(m2);
+    } catch (const std::runtime_error &e) {
+        std::cerr << e.what() << std::endl;
+    }
+*/
+Matrix* Matrix::add(Matrix* m) {
+    if (rows != m->getRows() || cols != m->getCols()) {
+        throw std::runtime_error("Error: Dimension error.");
+    }
+    
+    std::thread threads[rows];
+    Matrix* result = new Matrix(rows, cols);
+    for (int i = 0; i < rows; i++) {
+        threads[i] = std::thread(add_thread, this, m, result, i);
+    }
+
+    for (int i = 0; i < rows; i++) {
+        threads[i].join();
+    }
+
+    return result;
+}
+
+/*
 Thread function to calculate partial dot product for a single row in the result
 matrix.
 
@@ -85,7 +140,7 @@ Example:
         Matrix* m2 = new Matrix(2, 1);
         Matrix* m3 = m.dot(m2);
     } catch (const std::runtime_error &e) {
-        cerr << e.what() << endl; 
+        std::cerr << e.what() << std::endl; 
     }
 */
 Matrix* Matrix::dot(Matrix* m) {

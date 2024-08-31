@@ -15,5 +15,13 @@ int main() {
     Matrix* m4 = m3->transpose();
     m4->print();
 
+    Matrix* m5 = new Matrix(1, 3);
+    m5->set(0, 0, 1.0);
+    m5->set(0, 1, 1.0);
+    m5->set(0, 2, 1.0);
+
+    Matrix* m6 = m5->add(m4);
+    m6->print();
+
     return 0;
 }
