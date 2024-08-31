@@ -1,5 +1,3 @@
-// TODO: Slice function
-
 #include "../include/Matrix.h"
 #include <iostream>
 #include <stdexcept>
@@ -13,12 +11,16 @@ Arguments:
     - c (int): The number of cols of the matrix.
 
 Return:
-    - N/A
+    - std::runtime_error: An error if any occured.
 
 Example:
     Matrix m(3, 2);
 */
 Matrix::Matrix(int r, int c) {
+    if (r < 0 || c < 0) {
+        throw std::runtime_error("Error: Dimension error.");
+    }
+
     rows = r;
     cols = c;
     data = new double[r * c];
@@ -54,13 +56,17 @@ Arguments:
     - d (double*): The values to set the matrix to.
 
 Return:
-    - N/A
+    - std::runtime_error: An error if any occured.
 
 Example:
     double values[] = {1.0, 1.0, 2.0, 2.0}:
     Matrix m(2, 2, values);
 */
 Matrix::Matrix(int r, int c, double* d) {
+    if (r < 0 || c < 0) {
+        throw std::runtime_error("Error: Dimension error.");
+    }
+
     rows = r;
     cols = c;
     data = new double[r * c];
@@ -257,6 +263,72 @@ Matrix* Matrix::transpose() {
     }
 
     return m;
+}
+
+/*
+Threaded function to copy a portion of the original matrix.
+
+Arguments:
+    - a (Matrix*): The source matrix.
+    - b (Matrix*): The result matrix.
+    - x (int): Starting x.
+    - x2 (int): Ending x (non-inclusive).
+    - y (int): Starting y.
+    - row (int): The row to process.
+
+Returns:
+    - N/A
+
+Example:
+    std::thread(slice_thread, a, b, 0, 2, 0, 1);
+*/
+void slice_thread(Matrix* a, Matrix* b, int x, int x2, int y, int row) {
+    for (int i = x; i < x2; i++) {
+        b->set(row - y, i - x, a->get(row, i));
+    } 
+}
+
+/*
+Returns a new matrix with requested ranges from current matrix.
+
+Arguments:
+    - x (int): Starting x
+    - x2 (int): Ending x (non-inclusive)
+    - y (int): Starting y
+    - y2 (int): Ending y (non-inclusive)
+
+Returns:
+    - Matrix*: The subset of the matrix with requested bounds.
+    - std::runtime_error: The error if any occured.
+
+Example:
+    try {
+        Matrix* m = new Matrix(4, 4);
+        Matrix* m2 = m.slice(0, 2, 0, 2);
+    } catch (const std::runtime_error &e) {
+        std::cerr << e.what() << std::endl;
+    }
+*/
+Matrix* Matrix::slice(int x, int x2, int y, int y2) {
+    if (
+        x < 0 || x >= cols || x2 < 0 || x2 > cols ||
+        y < 0 || y >= rows || y2 < 0 || y2 > rows ||
+        x2 <= x || y2 <= y
+    ) {
+        throw std::runtime_error("Error: Dimension error.");
+    }
+
+    std::thread threads[y2 - y];
+    Matrix* result = new Matrix(y2 - y, x2 - x);
+    for (int i = y; i < y2; i++) {
+        threads[i - y] = std::thread(slice_thread, this, result, x, x2, y, i);
+    }
+
+    for (int i = y; i < y2; i++) {
+        threads[i - y].join();
+    }
+
+    return result;
 }
 
 /*

@@ -17,6 +17,7 @@ class Matrix {
         Matrix* add(Matrix* m);
         Matrix* dot(Matrix* m);
         Matrix* transpose();
+        Matrix* slice(int x, int x2, int y, int y2);
 
         double get(int r, int c);
         void set(int r, int c, double v);

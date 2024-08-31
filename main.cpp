@@ -27,5 +27,8 @@ int main() {
     Matrix* m7 = new Matrix(2, 2, values);
     m7->print();
 
+    Matrix* m8 = m7->slice(1, 2, 1, 2);
+    m8->print();
+
     return 0;
 }
