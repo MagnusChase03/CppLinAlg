@@ -1,7 +1,5 @@
 /*
 TODO:
-    - Add bounds checks on get/set 
-    - Add transpose
     - Add add function
 */
 
@@ -40,7 +38,7 @@ Return:
     - N/A
 
 Example:
-    Matrix m = new Matrix(3, 2);
+    Matrix* m = new Matrix(3, 2);
     delete m;
 */
 Matrix::~Matrix() {
@@ -109,6 +107,54 @@ Matrix* Matrix::dot(Matrix* m) {
 }
 
 /*
+Does a partial transpose for multithreading.
+
+Arguments:
+    - a (Matrix*): The source matrix.
+    - b (Matrix*): The result matrix.
+    - row (int): The row to do partial transpose on.
+
+Returns:
+    - N/A
+
+Example:
+    std::thread(transpose_thread, a, b, 0);
+*/
+void transpose_thread(Matrix* a, Matrix* b, int row) {
+    for (int i = 0; i < a->getCols(); i++) {
+        b->set(i, row, a->get(row, i));
+    }
+}
+
+/*
+Returns the transpose of a matrix.
+
+Arguments:
+    - N/A
+
+Returns:
+    - N/A
+
+Example:
+    Matrix* m = new Matrix(3, 2);
+    Matrix* m2 = m.transpose();
+*/
+Matrix* Matrix::transpose() {
+    std::thread threads[rows];
+
+    Matrix* m = new Matrix(cols, rows);
+    for (int i = 0; i < rows; i++) {
+        threads[i] = std::thread(transpose_thread, this, m, i);
+    }
+    
+    for (int i = 0; i < rows; i++) {
+        threads[i].join();
+    }
+
+    return m;
+}
+
+/*
 Gets a value in the matrix.
 
 Arguments:
@@ -117,12 +163,17 @@ Arguments:
 
 Return:
     - double: The value in the matrix.
+    - std::runtime_error: An error if any occured.
 
 Example:
     Matrix m(3, 2);
     double d = m.get(0, 0);
 */
 double Matrix::get(int r, int c) {
+    if (r < 0 || r >= rows || c < 0 || c >= cols) {
+        throw std::runtime_error("Error: Invalid dimension.");
+    }
+
     return data[(r * cols) + c];
 }
 
@@ -135,13 +186,17 @@ Arguments:
     - v (double): The value to set.
 
 Return:
-    - N/A
+    - std::runtime_error: An error if any occured.
 
 Example:
     Matrix m(3, 2);
     m.set(0, 0, 1.0);
 */
 void Matrix::set(int r, int c, double v) {
+    if (r < 0 || r >= rows || c < 0 || c >= cols) {
+        throw std::runtime_error("Error: Invalid dimension.");
+    }
+
     data[(r * cols) + c] = v;
 }
 

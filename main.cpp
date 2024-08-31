@@ -12,5 +12,8 @@ int main() {
     Matrix* m3 = m->dot(m2);
     m3->print();
 
+    Matrix* m4 = m3->transpose();
+    m4->print();
+
     return 0;
 }

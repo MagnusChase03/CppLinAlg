@@ -14,6 +14,7 @@ class Matrix {
         int getCols() {return cols;}
 
         Matrix* dot(Matrix* m);
+        Matrix* transpose();
 
         double get(int r, int c);
         void set(int r, int c, double v);
