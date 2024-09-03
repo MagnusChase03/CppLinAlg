@@ -8,4 +8,3 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
-target_link_libraries(${PROJECT_NAME} glfw)
