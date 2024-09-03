@@ -29,6 +29,7 @@ $ ./CppLinAlg
     - Matrix* add(Matrix* m)
     - Matrix* dot(Matrix* m)
     - Matrix* transpose()
+    - Matrix* slice(int x, int x2, int y, int y2)
     - void set(int r, int c, double v)
     - double get(int r, int c)
     - void print()
